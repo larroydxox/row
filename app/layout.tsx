@@ -31,8 +31,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html
       lang='pt-BR'
       className={`h-full ${spaceMono.variable} ${jetbrainsMono.variable} ${caveat.variable}`}
+      suppressHydrationWarning
     >
-      <body className='h-full' style={{ background: 'var(--bg-base)', color: 'var(--text-primary)' }}>
+      <body className='h-full' style={{ background: 'var(--bg-base)', color: 'var(--text-primary)' }} suppressHydrationWarning>
         <AppShell>{children}</AppShell>
       </body>
     </html>
