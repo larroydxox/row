@@ -8,8 +8,22 @@ import { QuickAddButton } from '@/components/layout/QuickAddButton'
 import { ToastContainer } from '@/components/shared/Toast'
 import { SidebarProvider, useSidebar } from '@/lib/sidebar-context'
 
-function AppShell({ children }: { children: React.ReactNode }) {
+function MainArea({ children, onOpenCommand }: { children: React.ReactNode; onOpenCommand: () => void }) {
   const { collapsed } = useSidebar()
+  return (
+    <div
+      className='flex flex-col min-h-screen'
+      style={{ marginLeft: collapsed ? 56 : 220, transition: 'margin-left 0.2s ease' }}
+    >
+      <Header onOpenCommand={onOpenCommand} />
+      <main className='flex-1 p-8 max-w-[1200px] mx-auto w-full'>
+        {children}
+      </main>
+    </div>
+  )
+}
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   const [cmdOpen, setCmdOpen] = useState(false)
 
   useEffect(() => {
@@ -24,37 +38,22 @@ function AppShell({ children }: { children: React.ReactNode }) {
   }, [])
 
   return (
-    <body className='h-full' style={{ background: 'var(--bg-base)', color: 'var(--text-primary)' }}>
-      <Sidebar />
-      <div
-        className='flex flex-col min-h-screen'
-        style={{
-          marginLeft: collapsed ? 56 : 220,
-          transition: 'margin-left 0.2s ease',
-        }}
-      >
-        <Header onOpenCommand={() => setCmdOpen(true)} />
-        <main className='flex-1 p-8 max-w-[1200px] mx-auto w-full'>
-          {children}
-        </main>
-      </div>
-      <CommandPalette open={cmdOpen} onClose={() => setCmdOpen(false)} />
-      <QuickAddButton />
-      <ToastContainer />
-    </body>
-  )
-}
-
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return (
     <html lang='pt-BR' className='h-full'>
       <head>
         <title>Valios — Life OS</title>
         <meta name='description' content='Dashboard pessoal' />
       </head>
-      <SidebarProvider>
-        <AppShell>{children}</AppShell>
-      </SidebarProvider>
+      <body className='h-full' style={{ background: 'var(--bg-base)', color: 'var(--text-primary)' }}>
+        <SidebarProvider>
+          <Sidebar />
+          <MainArea onOpenCommand={() => setCmdOpen(true)}>
+            {children}
+          </MainArea>
+          <CommandPalette open={cmdOpen} onClose={() => setCmdOpen(false)} />
+          <QuickAddButton />
+          <ToastContainer />
+        </SidebarProvider>
+      </body>
     </html>
   )
 }
