@@ -1,11 +1,15 @@
 'use client'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useState } from 'react'
 import {
   Home, CheckSquare, Lightbulb, Brain, Wallet, Heart, Settings, ChevronLeft, ChevronRight
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+
+interface SidebarProps {
+  collapsed: boolean
+  onToggle: () => void
+}
 
 const groups = [
   {
@@ -31,8 +35,7 @@ const groups = [
   },
 ]
 
-export function Sidebar() {
-  const [collapsed, setCollapsed] = useState(false)
+export function Sidebar({ collapsed, onToggle }: SidebarProps) {
   const pathname = usePathname()
 
   return (
@@ -127,7 +130,7 @@ export function Sidebar() {
           {!collapsed && <span>Config</span>}
         </Link>
         <button
-          onClick={() => setCollapsed(!collapsed)}
+          onClick={onToggle}
           className={cn(
             'flex items-center gap-3 px-3 py-2.5 rounded-md text-sm transition-all duration-150 w-full',
             collapsed && 'justify-center px-0'
