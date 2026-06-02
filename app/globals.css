@@ -1,0 +1,131 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Caveat:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --bg-base: #0a0a0a;
+  --bg-surface: #111111;
+  --bg-elevated: #161616;
+  --border: #1f1f1f;
+  --border-active: #2a2a2a;
+  --text-primary: #f0f0f0;
+  --text-secondary: #888888;
+  --text-muted: #444444;
+  --accent-green: #00ff88;
+  --accent-green-dim: rgba(0,255,136,0.13);
+  --accent-amber: #f59e0b;
+  --accent-red: #ef4444;
+  --accent-blue: #3b82f6;
+  --accent-purple: #8b5cf6;
+
+  --background: #0a0a0a;
+  --foreground: #f0f0f0;
+  --card: #111111;
+  --card-foreground: #f0f0f0;
+  --popover: #161616;
+  --popover-foreground: #f0f0f0;
+  --primary: #00ff88;
+  --primary-foreground: #0a0a0a;
+  --secondary: #161616;
+  --secondary-foreground: #f0f0f0;
+  --muted: #1f1f1f;
+  --muted-foreground: #888888;
+  --accent: #161616;
+  --accent-foreground: #f0f0f0;
+  --destructive: #ef4444;
+  --border: #1f1f1f;
+  --input: #1f1f1f;
+  --ring: #00ff88;
+  --radius: 0.5rem;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+}
+
+* { box-sizing: border-box; }
+html, body {
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-family: 'Geist', 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.025;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-active); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: #333; }
+::selection { background: rgba(0,255,136,0.2); color: var(--text-primary); }
+
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 12px rgba(0,255,136,0.13); }
+  50% { box-shadow: 0 0 28px rgba(0,255,136,0.22); }
+}
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes slide-in-right {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+@keyframes bar-grow {
+  from { transform-origin: bottom; transform: scaleY(0); }
+  to { transform-origin: bottom; transform: scaleY(1); }
+}
+@keyframes water-rise {
+  from { clip-path: inset(100% 0 0 0); }
+  to { clip-path: inset(0% 0 0 0); }
+}
+@keyframes stroke-draw {
+  to { stroke-dashoffset: 0; }
+}
+
+.animate-fade-in { animation: fade-in 0.15s ease-out forwards; }
+.glow-pulse { animation: glow-pulse 3s ease-in-out infinite; }
+.dot-grid {
+  background-image: radial-gradient(circle, #1f1f1f 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+.font-mono { font-family: 'JetBrains Mono', 'Space Mono', monospace; }
+.font-cursive { font-family: 'Caveat', cursive; }
+
+@layer base {
+  * { @apply border-border; }
+  body { @apply bg-background text-foreground; }
+}
