@@ -5,11 +5,7 @@ import {
   Home, CheckSquare, Lightbulb, Brain, Wallet, Heart, Settings, ChevronLeft, ChevronRight
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
-
-interface SidebarProps {
-  collapsed: boolean
-  onToggle: () => void
-}
+import { useSidebar } from '@/lib/sidebar-context'
 
 const groups = [
   {
@@ -35,7 +31,8 @@ const groups = [
   },
 ]
 
-export function Sidebar({ collapsed, onToggle }: SidebarProps) {
+export function Sidebar() {
+  const { collapsed, setCollapsed } = useSidebar()
   const pathname = usePathname()
 
   return (
@@ -76,9 +73,7 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
                   href={item.href}
                   className={cn(
                     'flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium mb-0.5 transition-all duration-150',
-                    active
-                      ? 'border-l-2'
-                      : 'border-l-2 border-transparent hover:border-transparent',
+                    'border-l-2',
                     collapsed && 'justify-center px-0'
                   )}
                   style={{
@@ -130,18 +125,14 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
           {!collapsed && <span>Config</span>}
         </Link>
         <button
-          onClick={onToggle}
+          onClick={() => setCollapsed(!collapsed)}
           className={cn(
             'flex items-center gap-3 px-3 py-2.5 rounded-md text-sm transition-all duration-150 w-full',
             collapsed && 'justify-center px-0'
           )}
           style={{ color: 'var(--text-muted)' }}
-          onMouseEnter={(e) => {
-            ;(e.currentTarget as HTMLElement).style.color = 'var(--text-secondary)'
-          }}
-          onMouseLeave={(e) => {
-            ;(e.currentTarget as HTMLElement).style.color = 'var(--text-muted)'
-          }}
+          onMouseEnter={(e) => { ;(e.currentTarget as HTMLElement).style.color = 'var(--text-secondary)' }}
+          onMouseLeave={(e) => { ;(e.currentTarget as HTMLElement).style.color = 'var(--text-muted)' }}
         >
           {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
           {!collapsed && <span className='text-xs'>Recolher</span>}

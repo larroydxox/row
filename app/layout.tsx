@@ -1,41 +1,60 @@
-import type { Metadata } from 'next'
-import { Space_Mono, JetBrains_Mono, Caveat } from 'next/font/google'
+'use client'
 import './globals.css'
-import { AppShell } from '@/components/layout/AppShell'
+import { useState, useEffect } from 'react'
+import { Sidebar } from '@/components/layout/Sidebar'
+import { Header } from '@/components/layout/Header'
+import { CommandPalette } from '@/components/layout/CommandPalette'
+import { QuickAddButton } from '@/components/layout/QuickAddButton'
+import { ToastContainer } from '@/components/shared/Toast'
+import { SidebarProvider, useSidebar } from '@/lib/sidebar-context'
 
-const spaceMono = Space_Mono({
-  weight: ['400', '700'],
-  subsets: ['latin'],
-  variable: '--font-space-mono',
-})
+function AppShell({ children }: { children: React.ReactNode }) {
+  const { collapsed } = useSidebar()
+  const [cmdOpen, setCmdOpen] = useState(false)
 
-const jetbrainsMono = JetBrains_Mono({
-  weight: ['400', '500', '600', '700'],
-  subsets: ['latin'],
-  variable: '--font-jetbrains',
-})
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault()
+        setCmdOpen((v) => !v)
+      }
+    }
+    window.addEventListener('keydown', handler)
+    return () => window.removeEventListener('keydown', handler)
+  }, [])
 
-const caveat = Caveat({
-  weight: ['400', '500', '600', '700'],
-  subsets: ['latin'],
-  variable: '--font-caveat',
-})
-
-export const metadata: Metadata = {
-  title: 'Valios — Life OS',
-  description: 'Dashboard pessoal',
+  return (
+    <body className='h-full' style={{ background: 'var(--bg-base)', color: 'var(--text-primary)' }}>
+      <Sidebar />
+      <div
+        className='flex flex-col min-h-screen'
+        style={{
+          marginLeft: collapsed ? 56 : 220,
+          transition: 'margin-left 0.2s ease',
+        }}
+      >
+        <Header onOpenCommand={() => setCmdOpen(true)} />
+        <main className='flex-1 p-8 max-w-[1200px] mx-auto w-full'>
+          {children}
+        </main>
+      </div>
+      <CommandPalette open={cmdOpen} onClose={() => setCmdOpen(false)} />
+      <QuickAddButton />
+      <ToastContainer />
+    </body>
+  )
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html
-      lang='pt-BR'
-      className={`h-full ${spaceMono.variable} ${jetbrainsMono.variable} ${caveat.variable}`}
-      suppressHydrationWarning
-    >
-      <body className='h-full' style={{ background: 'var(--bg-base)', color: 'var(--text-primary)' }} suppressHydrationWarning>
+    <html lang='pt-BR' className='h-full'>
+      <head>
+        <title>Valios — Life OS</title>
+        <meta name='description' content='Dashboard pessoal' />
+      </head>
+      <SidebarProvider>
         <AppShell>{children}</AppShell>
-      </body>
+      </SidebarProvider>
     </html>
   )
 }

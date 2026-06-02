@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Caveat:wght@400;500;600;700&family=Geist:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
@@ -70,12 +71,10 @@
 html, body {
   background: var(--bg-base);
   color: var(--text-primary);
-  font-family: var(--font-geist-sans), 'Inter', system-ui, sans-serif;
+  font-family: 'Geist', 'Inter', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
-.font-mono { font-family: var(--font-jetbrains), var(--font-space-mono), monospace !important; }
-.font-cursive { font-family: var(--font-caveat), cursive !important; }
 
 body::after {
   content: '';
@@ -115,6 +114,10 @@ body::after {
 }
 @keyframes stroke-draw {
   to { stroke-dashoffset: 0; }
+}
+@keyframes toast-progress {
+  from { width: 100%; }
+  to { width: 0%; }
 }
 
 .animate-fade-in { animation: fade-in 0.15s ease-out forwards; }
