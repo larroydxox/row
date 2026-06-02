@@ -168,10 +168,10 @@ body.topbar-modal-open {
 
   // -------- HTML --------
   const html = `
-<header class="topbar" id="topbar" role="navigation" aria-label="Quick stats">
+<header class="topbar" id="topbar" role="navigation" aria-label="Estatísticas rápidas">
   <a href="index.html" class="topbar-pill" id="topbarGoals">
     <span class="topbar-pill-dot"></span>
-    <span class="topbar-pill-label">GOALS</span>
+    <span class="topbar-pill-label">METAS</span>
     <span class="topbar-pill-count" id="topbarGoalsCount">—/—</span>
   </a>
   <a href="health.html" class="topbar-pill" id="topbarStack">
@@ -182,18 +182,18 @@ body.topbar-modal-open {
   <div class="topbar-water-wrap">
     <a href="health.html#water" class="topbar-water-pill" id="topbarWater">
       <span class="topbar-pill-dot"></span>
-      <span class="topbar-pill-label">WATER</span>
+      <span class="topbar-pill-label">ÁGUA</span>
       <span class="topbar-pill-count" id="topbarWaterCount">—/—</span>
     </a>
-    <button class="topbar-water-add" id="topbarWaterAdd" aria-label="Log one drink" type="button">+</button>
+    <button class="topbar-water-add" id="topbarWaterAdd" aria-label="Registrar um copo" type="button">+</button>
   </div>
   <a href="gym.html" class="topbar-pill" id="topbarGym">
     <span class="topbar-pill-dot"></span>
-    <span class="topbar-pill-label">GYM</span>
+    <span class="topbar-pill-label">ACADEMIA</span>
   </a>
   <a href="finance.html" class="topbar-pill" id="topbarFinance">
     <span class="topbar-pill-dot"></span>
-    <span class="topbar-pill-label">FINANCE</span>
+    <span class="topbar-pill-label">FINANÇAS</span>
   </a>
 </header>
 `;
