@@ -7,7 +7,8 @@ import { mockFinance } from '@/lib/data/mock-finance'
 
 export function QuickStats() {
   const health = useHealth((s) => s.health)
-  const tasks = useTasks((s) => s.tasks.filter((t) => t.date === 'today'))
+  const allTasks = useTasks((s) => s.tasks)
+  const tasks = allTasks.filter((t) => t.date === 'today')
   const waterPct = Math.round((health.water.consumed / health.water.goal) * 100)
   const gymDone = health.gym.today.status === 'done'
   const doneTasks = tasks.filter((t) => t.done).length

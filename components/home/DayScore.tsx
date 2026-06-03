@@ -26,7 +26,8 @@ function getPhaseLabel(score: number): string {
 }
 
 export function DayScore() {
-  const tasks = useTasks((s) => s.tasks.filter((t) => t.date === 'today'))
+  const allTasks = useTasks((s) => s.tasks)
+  const tasks = allTasks.filter((t) => t.date === 'today')
   const health = useHealth((s) => s.health)
   const score = dayScore(
     tasks,

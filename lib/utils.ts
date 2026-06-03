@@ -5,13 +5,11 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+// Formatter manual — sem Intl/locale para evitar hydration mismatch server/client
 export function formatCHF(value: number): string {
-  return new Intl.NumberFormat('de-CH', {
-    style: 'currency',
-    currency: 'CHF',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(value)
+  const n = Math.round(value)
+  const s = String(n).replace(/\B(?=(\d{3})+(?!\d))/g, "'")
+  return `CHF ${s}`
 }
 
 export function timeAgo(date: Date): string {

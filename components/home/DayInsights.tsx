@@ -3,7 +3,8 @@ import { useTasks } from '@/lib/store/use-tasks'
 import { useHealth } from '@/lib/store/use-health'
 
 export function DayInsights() {
-  const tasks = useTasks((s) => s.tasks.filter((t) => t.date === 'today' && !t.done))
+  const allTasks = useTasks((s) => s.tasks)
+  const tasks = allTasks.filter((t) => t.date === 'today' && !t.done)
   const health = useHealth((s) => s.health)
   const waterPct = Math.round((health.water.consumed / health.water.goal) * 100)
   const gymDone = health.gym.today.status === 'done'
