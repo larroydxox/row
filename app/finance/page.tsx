@@ -3,6 +3,9 @@ import { useState } from 'react'
 import { useFinanceStore } from '@/lib/store/use-finance'
 import { formatBRL } from '@/lib/utils/format'
 import { getTotal, getCategoryTotal } from '@/lib/utils/finance'
+import { FinanceCalendar } from '@/components/finance/FinanceCalendar'
+import { MyCards } from '@/components/finance/MyCards'
+import { Debts } from '@/components/finance/Debts'
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts'
 import { Landmark, TrendingUp, Coins, Package, Plus, X } from 'lucide-react'
 
@@ -109,6 +112,14 @@ export default function FinancePage() {
             />
           )
         })}
+      </div>
+
+      {/* ── Novas seções ─────────────────────────────────────────────────── */}
+      <FinanceCalendar />
+
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+        <MyCards />
+        <Debts />
       </div>
     </div>
   )
