@@ -1,9 +1,10 @@
 'use client'
 import { useEffect, useRef, useState, useCallback } from 'react'
-import { useTasks } from '@/lib/store/use-tasks'
-import { useHealth } from '@/lib/store/use-health'
-import { useFinance } from '@/lib/store/use-finance'
-import { formatBRL } from '@/lib/utils'
+import { useTasksStore } from '@/lib/store/use-tasks'
+import { useHealthStore } from '@/lib/store/use-health'
+import { useFinanceStore } from '@/lib/store/use-finance'
+import { formatBRL } from '@/lib/utils/format'
+import { getTotal } from '@/lib/utils/finance'
 
 const GEMINI_KEY = process.env.NEXT_PUBLIC_GEMINI_KEY ?? ''
 
@@ -166,11 +167,12 @@ export function JarvisWidget({ open, setOpen }: Props) {
   const micVolRef      = useRef(0)
 
   // contexto do dia para o system prompt
-  const allTasks = useTasks((s) => s.tasks)
-  const today    = allTasks.filter((t) => t.date === 'today')
-  const pending  = today.filter((t) => !t.done).map((t) => t.title)
-  const health   = useHealth((s) => s.health)
-  const total    = useFinance((s) => s.total)
+  const allTasks  = useTasksStore((s) => s.tasks)
+  const today     = allTasks.filter((t) => t.date === 'today')
+  const pending   = today.filter((t) => !t.done).map((t) => t.title)
+  const { getTodayWater, getTodaySession } = useHealthStore()
+  const categories = useFinanceStore((s) => s.categories)
+  const total      = getTotal(categories)
 
   // ── Loop de animação ────────────────────────────────────────────────────────
   useEffect(() => {
@@ -242,8 +244,8 @@ export function JarvisWidget({ open, setOpen }: Props) {
     const systemPrompt = `Você é JARVIS, assistente pessoal no dashboard VALIOS.
 Contexto de hoje:
 - Tarefas pendentes: ${pending.length ? pending.join(', ') : 'nenhuma'}
-- Água: ${(health.water.consumed / 1000).toFixed(1)}L de ${(health.water.goal / 1000).toFixed(1)}L
-- Treino: ${health.gym.today.status === 'done' ? `${health.gym.today.type} feito` : 'pendente'}
+- Água: ${(getTodayWater() / 1000).toFixed(1)}L
+- Treino: ${getTodaySession() ? `${getTodaySession()!.type} feito` : 'pendente'}
 - Patrimônio: ${formatBRL(total)}
 Responda em no máximo 2 frases. Seja direto. Português do Brasil.`
 
@@ -273,7 +275,7 @@ Responda em no máximo 2 frases. Seja direto. Português do Brasil.`
       const msg = 'Erro ao conectar com Gemini.'
       setReply(msg); speak(msg)
     }
-  }, [pending, health, total])
+  }, [pending, total, getTodayWater, getTodaySession])
 
   // ── Speech Recognition ───────────────────────────────────────────────────────
   const stopListening = useCallback(() => {

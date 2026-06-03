@@ -1,60 +1,60 @@
 import { create } from 'zustand'
-import { mockFinance } from '../data/mock-finance'
+import { persist } from 'zustand/middleware'
 
-type Item = { id: string; name: string; value: number }
-type Category = {
-  id: string
-  name: string
-  icon: string
-  color: string
-  items: Item[]
+export interface FinanceItem { id: string; name: string; value: number }
+export interface FinanceCategory { id: string; name: string; color: string; icon: string; items: FinanceItem[] }
+export interface FinanceEntry { date: string; total: number }
+
+interface FinanceStore {
+  categories: FinanceCategory[]
+  history: FinanceEntry[]
+  addItem: (categoryId: string, name: string, value: number) => void
+  updateItem: (categoryId: string, itemId: string, value: number) => void
+  deleteItem: (categoryId: string, itemId: string) => void
+  removeItem: (categoryId: string, itemId: string) => void  // alias deleteItem
+  addHistoryEntry: () => void
 }
 
-interface FinanceState {
-  total: number
-  categories: Category[]
-  updateItem: (catId: string, itemId: string, value: number) => void
-  addItem: (catId: string, name: string) => void
-  removeItem: (catId: string, itemId: string) => void
-}
+export const useFinanceStore = create<FinanceStore>()(persist(
+  (set, get) => ({
+    categories: [
+      { id: 'bank',   name: 'Contas Bancárias',     color: '#3b82f6', icon: 'landmark',    items: [] },
+      { id: 'stocks', name: 'Ações & Investimentos', color: '#00ff88', icon: 'trending-up', items: [] },
+      { id: 'crypto', name: 'Crypto',                color: '#f59e0b', icon: 'coins',       items: [] },
+      { id: 'other',  name: 'Outros Ativos',         color: '#8b5cf6', icon: 'package',     items: [] },
+    ],
+    history: [],
 
-const initialCategories: Category[] = mockFinance.categories.map((c, ci) => ({
-  id: `cat-${ci}`,
-  name: c.name,
-  icon: c.icon,
-  color: c.color,
-  items: c.items.map((item, ii) => ({ id: `item-${ci}-${ii}`, name: item.name, value: item.value })),
-}))
+    addItem: (catId, name, value) =>
+      set((s) => ({
+        categories: s.categories.map((c) =>
+          c.id !== catId ? c : { ...c, items: [...c.items, { id: crypto.randomUUID(), name, value }] }
+        ),
+      })),
 
-function calcTotal(cats: Category[]) {
-  return cats.reduce((sum, c) => sum + c.items.reduce((s, i) => s + i.value, 0), 0)
-}
+    updateItem: (catId, itemId, value) =>
+      set((s) => ({
+        categories: s.categories.map((c) =>
+          c.id !== catId ? c : { ...c, items: c.items.map((i) => i.id !== itemId ? i : { ...i, value }) }
+        ),
+      })),
 
-export const useFinance = create<FinanceState>((set) => ({
-  total: mockFinance.total,
-  categories: initialCategories,
+    deleteItem: (catId, itemId) =>
+      set((s) => ({
+        categories: s.categories.map((c) =>
+          c.id !== catId ? c : { ...c, items: c.items.filter((i) => i.id !== itemId) }
+        ),
+      })),
 
-  updateItem: (catId, itemId, value) =>
-    set((s) => {
-      const cats = s.categories.map((c) =>
-        c.id !== catId ? c : { ...c, items: c.items.map((i) => (i.id !== itemId ? i : { ...i, value })) }
-      )
-      return { categories: cats, total: calcTotal(cats) }
-    }),
+    removeItem: (catId, itemId) => get().deleteItem(catId, itemId),
 
-  addItem: (catId, name) =>
-    set((s) => {
-      const cats = s.categories.map((c) =>
-        c.id !== catId ? c : { ...c, items: [...c.items, { id: crypto.randomUUID(), name, value: 0 }] }
-      )
-      return { categories: cats }
-    }),
+    addHistoryEntry: () => {
+      const total = get().categories.reduce((acc, c) => acc + c.items.reduce((a, i) => a + i.value, 0), 0)
+      set((s) => ({ history: [...s.history, { date: new Date().toISOString(), total }] }))
+    },
+  }),
+  { name: 'valios-finance' }
+))
 
-  removeItem: (catId, itemId) =>
-    set((s) => {
-      const cats = s.categories.map((c) =>
-        c.id !== catId ? c : { ...c, items: c.items.filter((i) => i.id !== itemId) }
-      )
-      return { categories: cats, total: calcTotal(cats) }
-    }),
-}))
+// Retrocompatibilidade
+export const useFinance = useFinanceStore

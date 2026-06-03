@@ -1,16 +1,15 @@
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { clsx, type ClassValue } from 'clsx'
+import { twMerge } from 'tailwind-merge'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-// Formatter manual — sem Intl/locale para evitar hydration mismatch server/client
-export function formatBRL(value: number): string {
-  const n = Math.round(value)
-  const s = String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '.')
-  return `R$ ${s}`
-}
+// Re-exports dos novos caminhos para retrocompatibilidade
+export { formatBRL } from './utils/format'
+export { formatDate } from './utils/format'
+export { calcScore as dayScore } from './utils/score'
+export { getTotal, getCategoryTotal } from './utils/finance'
 
 export function timeAgo(date: Date): string {
   const seconds = Math.floor((Date.now() - date.getTime()) / 1000)
@@ -31,22 +30,8 @@ export function greeting(): string {
 }
 
 export function todayLabel(): string {
-  const days = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']
-  const months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
+  const days   = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb']
+  const months = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez']
   const d = new Date()
   return `${days[d.getDay()]}, ${d.getDate()} ${months[d.getMonth()]}`
-}
-
-export function dayScore(
-  tasks: { done: boolean }[],
-  waterConsumed: number,
-  waterGoal: number,
-  gymDone: boolean
-): number {
-  const taskDone = tasks.filter((t) => t.done).length
-  const taskTotal = tasks.length
-  const taskScore = taskTotal > 0 ? (taskDone / taskTotal) * 40 : 0
-  const waterScore = Math.min((waterConsumed / waterGoal) * 30, 30)
-  const gymScore = gymDone ? 30 : 0
-  return Math.round(taskScore + waterScore + gymScore)
 }
