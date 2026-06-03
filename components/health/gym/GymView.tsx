@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useHealth } from '@/lib/store/use-health'
 import { mockHealth } from '@/lib/data/mock-health'
 import { Check, Timer, Plus, Dumbbell } from 'lucide-react'
@@ -182,7 +182,7 @@ function WorkoutHeatmap({ history }: { history: typeof mockHealth.gym.history })
           </div>
         ))}
         {days.map((day, di) => (
-          <>
+          <React.Fragment key={day}>
             <div key={`label-${day}`} className='text-[10px] font-mono flex items-center' style={{ color: 'var(--text-muted)' }}>
               {day}
             </div>
@@ -203,7 +203,7 @@ function WorkoutHeatmap({ history }: { history: typeof mockHealth.gym.history })
                 />
               )
             })}
-          </>
+          </React.Fragment>
         ))}
       </div>
       <div className='flex items-center gap-3 mt-3 justify-end'>

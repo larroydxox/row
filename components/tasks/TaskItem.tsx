@@ -50,8 +50,7 @@ export function TaskItem({ task }: TaskItemProps) {
         className='flex-1 text-sm transition-all duration-200'
         style={{
           color: task.done ? 'var(--text-muted)' : 'var(--text-primary)',
-          textDecoration: task.done ? 'line-through' : 'none',
-          textDecorationColor: 'var(--text-muted)',
+          textDecoration: task.done ? 'line-through var(--text-muted)' : 'none',
         }}
       >
         {task.title}
