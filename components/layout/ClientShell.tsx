@@ -4,16 +4,35 @@ import { Sidebar } from './Sidebar'
 import { CommandPalette } from './CommandPalette'
 import { QuickAddButton } from './QuickAddButton'
 import { ToastContainer } from '@/components/shared/Toast'
+import { JarvisWidget } from '@/components/jarvis/JarvisWidget'
 
 export function ClientShell({ children }: { children: React.ReactNode }) {
   const [collapsed, setCollapsed] = useState(false)
-  const [cmdOpen, setCmdOpen] = useState(false)
+  const [cmdOpen, setCmdOpen]     = useState(false)
+  const [jarvisOpen, setJarvisOpen] = useState(false)
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
+      const tag = (document.activeElement as HTMLElement)?.tagName
+      const editable = tag === 'INPUT' || tag === 'TEXTAREA' || (document.activeElement as HTMLElement)?.isContentEditable
+
+      // ⌘K — command palette
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault()
         setCmdOpen((v) => !v)
+        return
+      }
+
+      // J — JARVIS
+      if (e.key === 'j' && !editable && !e.metaKey && !e.ctrlKey) {
+        setJarvisOpen((v) => !v)
+        return
+      }
+
+      // ESC — fecha tudo
+      if (e.key === 'Escape') {
+        setCmdOpen(false)
+        setJarvisOpen(false)
       }
     }
     window.addEventListener('keydown', handler)
@@ -24,21 +43,15 @@ export function ClientShell({ children }: { children: React.ReactNode }) {
     <>
       <Sidebar collapsed={collapsed} onToggle={() => setCollapsed((v) => !v)} />
       <div style={{ marginLeft: collapsed ? 56 : 220, transition: 'margin-left 0.2s ease', minHeight: '100vh' }}>
-        <header
-          style={{
-            height: 56,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            padding: '0 32px',
-            position: 'sticky',
-            top: 0,
-            zIndex: 40,
-            background: 'rgba(10,10,10,0.9)',
-            backdropFilter: 'blur(12px)',
-            borderBottom: '1px solid var(--border)',
-          }}
-        >
+        <header style={{
+          height: 56,
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          padding: '0 32px',
+          position: 'sticky', top: 0, zIndex: 40,
+          background: 'rgba(10,10,10,0.9)',
+          backdropFilter: 'blur(12px)',
+          borderBottom: '1px solid var(--border)',
+        }}>
           <Greeting />
           <button
             onClick={() => setCmdOpen(true)}
@@ -56,7 +69,9 @@ export function ClientShell({ children }: { children: React.ReactNode }) {
           {children}
         </main>
       </div>
+
       <CommandPalette open={cmdOpen} onClose={() => setCmdOpen(false)} />
+      <JarvisWidget open={jarvisOpen} setOpen={setJarvisOpen} />
       <QuickAddButton />
       <ToastContainer />
     </>
@@ -66,7 +81,7 @@ export function ClientShell({ children }: { children: React.ReactNode }) {
 function Greeting() {
   const h = new Date().getHours()
   const greeting = h < 12 ? 'Bom dia' : h < 18 ? 'Boa tarde' : 'Boa noite'
-  const days = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']
+  const days   = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb']
   const months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez']
   const d = new Date()
   const label = `${days[d.getDay()]}, ${d.getDate()} ${months[d.getMonth()]}`
