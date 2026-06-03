@@ -2,7 +2,7 @@
 import { Droplets, Dumbbell, Wallet, Flame } from 'lucide-react'
 import { useHealth } from '@/lib/store/use-health'
 import { useTasks } from '@/lib/store/use-tasks'
-import { formatCHF } from '@/lib/utils'
+import { formatBRL } from '@/lib/utils'
 import { mockFinance } from '@/lib/data/mock-finance'
 
 export function QuickStats() {
@@ -36,7 +36,7 @@ export function QuickStats() {
     {
       icon: Wallet,
       label: 'Patrimônio',
-      value: formatCHF(mockFinance.total),
+      value: formatBRL(mockFinance.total),
       sub: '↑ +2.3% mês',
       pct: null,
       color: 'var(--accent-green)',

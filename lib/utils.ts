@@ -6,10 +6,10 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 // Formatter manual — sem Intl/locale para evitar hydration mismatch server/client
-export function formatCHF(value: number): string {
+export function formatBRL(value: number): string {
   const n = Math.round(value)
-  const s = String(n).replace(/\B(?=(\d{3})+(?!\d))/g, "'")
-  return `CHF ${s}`
+  const s = String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+  return `R$ ${s}`
 }
 
 export function timeAgo(date: Date): string {

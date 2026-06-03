@@ -1,6 +1,6 @@
 export const mockFinance = {
   total: 12400,
-  currency: 'CHF',
+  currency: 'BRL',
   history: [
     { month: 'Jan', value: 9800 },
     { month: 'Fev', value: 10200 },
@@ -51,8 +51,8 @@ export const mockFinance = {
     },
   ],
   recentActivity: [
-    { action: 'Conta Neon atualizada', delta: '+500 CHF', time: 'há 2 dias' },
-    { action: 'VOO ETF comprado', delta: '+320 CHF', time: 'há 5 dias' },
-    { action: 'Aporte mensal registrado', delta: '+800 CHF', time: 'há 8 dias' },
+    { action: 'Conta Neon atualizada', delta: '+500 BRL', time: 'há 2 dias' },
+    { action: 'VOO ETF comprado', delta: '+320 BRL', time: 'há 5 dias' },
+    { action: 'Aporte mensal registrado', delta: '+800 BRL', time: 'há 8 dias' },
   ],
 }
